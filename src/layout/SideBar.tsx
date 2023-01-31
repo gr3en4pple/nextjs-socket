@@ -18,7 +18,7 @@ const SideBar: React.FC<PropsWithChildren> = ({ children }) => {
           ))}
         </ul>
       </div>
-      {children}
+      <div className="flex-1">{children}</div>
     </div>
   );
 };

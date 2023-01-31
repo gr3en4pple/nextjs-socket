@@ -1,10 +1,12 @@
 import Button from '@/components/common/Button';
 import { HttpClient } from '@/config/http-client';
+import { useAppContext } from '@/context/appContext';
 import Header from '@/layout/Header';
 import React, { useRef } from 'react';
 
 const Login = () => {
   const formRef = useRef(null);
+  const { setIsLoggedIn } = useAppContext();
 
   return (
     <>
@@ -20,14 +22,18 @@ const Login = () => {
                 const formData = new FormData(formRef.current);
                 const username = formData.get('username');
                 const password = formData.get('password');
-                if ((username && username?.length < 6) || (password && password?.length < 6)) return;
+                if ((username && username?.toString().length < 6) || (password && password.toString().length < 6)) {
+                  alert('user name or password too short');
+                  return;
+                }
+
                 try {
                   const res = await HttpClient.post('/auth/login', {
                     username,
                     password,
                   });
-                  console.log('res:', res);
                   window.localStorage.setItem('accessToken', res.access_token);
+                  setIsLoggedIn(true);
                 } catch (error) {
                   console.log('error:', error);
                 }

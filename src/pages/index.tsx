@@ -1,4 +1,5 @@
 import Hello from '@/components/Hello';
+import { useAppContext } from '@/context/appContext';
 import Header from '@/layout/Header';
 import styles from '@/styles/Home.module.css';
 import { useEffect, useState } from 'react';
@@ -6,6 +7,8 @@ import { io, Socket } from 'socket.io-client';
 
 export default function Home() {
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
+
+  const { isLoggedIn } = useAppContext();
 
   useEffect(() => {
     socket?.emit('findAllGateway', (data: any) => {
