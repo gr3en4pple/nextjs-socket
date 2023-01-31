@@ -32,10 +32,10 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="flex justify-center items-center min-h-screen">
-        <div>
+      <div className="flex justify-center items-center  w-full">
+        <div className="text-center">
           <div className="font-medium text-4xl">Hello!</div>
-          <Hello />
+          <div className="text-sm ">You are connected to socket id: {socket?.id}</div>
         </div>
       </div>
     </>
