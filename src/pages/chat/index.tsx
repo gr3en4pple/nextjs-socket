@@ -2,7 +2,7 @@ import Button from '@/components/common/Button';
 import { useAppContext } from '@/context/appContext';
 import Layout from '@/layout';
 import { WSChat } from '@/services/socket';
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import React, { ReactElement, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const Chat = () => {
   const boxChatRef = useRef<HTMLDivElement>(null);
@@ -16,11 +16,14 @@ const Chat = () => {
       socket?.on(WSChat.ALL_CHAT, (chats) => {
         setChats(chats);
         if (boxChatRef.current) {
-          boxChatRef.current.scrollIntoView();
+          const element = boxChatRef.current;
+          element.scroll({ top: element.scrollHeight, behavior: 'smooth' });
+          // boxChatRef.current.scrollTop = boxChatRef.current.scrollHeight;
         }
       });
-      socket?.on(WSChat.CONNECTED_CHAT, (chats) => {
-        setChats(chats);
+      socket?.emit(WSChat.JOIN_CHAT, (data: any) => {
+        console.log('data:', data);
+        // socket.on("")
       });
     }
   }, [socket, boxChatRef]);
@@ -29,11 +32,14 @@ const Chat = () => {
     <div className="min-h-screen flex justify-center mt-20">
       <div>
         <p className="text-2xl font-bold">Chat Box</p>
-        <div className="border w-[500px] h-[400px] overflow-y-scroll rounded-lg p-2 mb-10">
+        <div
+          ref={boxChatRef}
+          className="border flex flex-col h-[400px] overflow-y-auto w-full max-w-[500px] rounded-lg p-2 mb-10"
+        >
           {chats.map((chat) => {
             const isMe = user?.username === chat.user;
             return (
-              <div key={chat._id} className={` flex w-full p-2 items-center ${isMe ? 'justify-end' : ' '} `}>
+              <div key={chat._id} className={`flex w-full  p-2 items-center ${isMe ? 'justify-end' : ' '} `}>
                 <div className={`${isMe ? 'bg-blue-500' : 'bg-slate-500'} p-2 rounded-lg text-white`}>
                   <span className="font-bold mr-1">{chat.user}:</span>
                   <span>{chat.content}</span>

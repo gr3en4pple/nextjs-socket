@@ -8,6 +8,5 @@ export const getMe = async (accessToken?: any) => {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-  console.log('res:', res);
   return res;
 };

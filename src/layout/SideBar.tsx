@@ -1,13 +1,9 @@
-import { useAppContext } from '@/context/appContext';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { PropsWithChildren } from 'react';
 
 const arrays = ['Home', 'chat'];
 
 const SideBar: React.FC<PropsWithChildren> = ({ children }) => {
-  const router = useRouter();
-
   return (
     <div className="flex min-h-screen">
       <div className="border-r w-[250px]">
