@@ -1,8 +1,9 @@
+import { useAppContext } from '@/context/appContext';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren } from 'react';
 
-const arrays = ['Home', 'login', 'chat'];
+const arrays = ['Home', 'chat'];
 
 const SideBar: React.FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();

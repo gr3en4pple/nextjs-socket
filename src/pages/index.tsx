@@ -1,37 +1,10 @@
-import Hello from '@/components/Hello';
 import { useAppContext } from '@/context/appContext';
+import Layout from '@/layout';
 import Header from '@/layout/Header';
-import styles from '@/styles/Home.module.css';
-import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import React from 'react';
 
 export default function Home() {
-  const [socket, setSocket] = useState<Socket | undefined>(undefined);
-
-  const { isLoggedIn } = useAppContext();
-
-  useEffect(() => {
-    socket?.emit('findAllGateway', (data: any) => {
-      console.log('emit', data);
-    });
-
-    return () => {
-      socket?.disconnect();
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    const socketInstance = io('http://localhost:3001');
-
-    socketInstance.on('connect', () => {
-      console.log(socketInstance.connected);
-      setSocket(socketInstance);
-    });
-
-    return () => {
-      socketInstance?.disconnect();
-    };
-  }, []);
+  const { socket } = useAppContext();
   return (
     <>
       <Header />
@@ -44,3 +17,7 @@ export default function Home() {
     </>
   );
 }
+
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  return <Layout>{page}</Layout>;
+};

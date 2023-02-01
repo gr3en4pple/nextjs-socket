@@ -2,11 +2,15 @@ import Button from '@/components/common/Button';
 import { HttpClient } from '@/config/http-client';
 import { useAppContext } from '@/context/appContext';
 import Header from '@/layout/Header';
+import { setCookies } from 'cookies-next';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
+import { NextPageWithLayout } from 'src/pages/_app';
 
-const Login = () => {
+const Login: NextPageWithLayout = () => {
   const formRef = useRef(null);
-  const { setIsLoggedIn } = useAppContext();
+  const router = useRouter();
 
   return (
     <>
@@ -33,7 +37,8 @@ const Login = () => {
                     password,
                   });
                   window.localStorage.setItem('accessToken', res.access_token);
-                  setIsLoggedIn(true);
+                  setCookies('accessToken', res.access_token);
+                  router.push('/');
                 } catch (error) {
                   console.log('error:', error);
                 }
@@ -43,13 +48,13 @@ const Login = () => {
           >
             <div>
               <label className="block" htmlFor="username">
-                User name*
+                User name<span className="text-red-500 font-bold">*</span>
               </label>
               <input id="username" name="username" className="rounded-lg border outline-none p-2 px-4" />
             </div>
             <div>
               <label className="block" htmlFor="password">
-                Pass word*
+                Password<span className="text-red-500 font-bold">*</span>
               </label>
               <input
                 type="password"

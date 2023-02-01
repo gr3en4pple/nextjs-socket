@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from 'axios';
-
 const AxiosInstance = axios.create({
   baseURL: process.env.API_URL,
   timeout: 50000,
@@ -9,8 +8,8 @@ const AxiosInstance = axios.create({
 });
 
 export class HttpClient {
-  static async get(uri: string) {
-    const res = await AxiosInstance.get(uri);
+  static async get(uri: string, config?: AxiosRequestConfig<any>) {
+    const res = await AxiosInstance.get(uri, config);
     return res.data;
   }
 
