@@ -6,16 +6,16 @@ const arrays = ['Home', 'chat'];
 const SideBar: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className="flex min-h-screen">
-      <div className="border-r w-[250px]">
+      <div className="border-r w-[250px] hidden md:block">
         <ul className="w-full mt-5 ">
           {arrays.map((menu, index) => (
             <li className="p-2 text-center border-b capitalize" key={menu}>
-              <Link href={index === 0 ? '/' : menu}>{menu}</Link>
+              <Link href={index === 0 ? '/' : `/${menu}`}>{menu}</Link>
             </li>
           ))}
         </ul>
       </div>
-      <div className="flex-1">{children}</div>
+      <div className="flex-1  px-4">{children}</div>
     </div>
   );
 };

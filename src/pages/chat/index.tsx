@@ -1,79 +1,25 @@
 import Button from '@/components/common/Button';
+import ChatBox from '@/components/views/chat/ChatBox';
+import LayoutChat from '@/components/views/chat/LayoutChat';
+import UserList from '@/components/views/chat/UserList';
 import { useAppContext } from '@/context/appContext';
 import Layout from '@/layout';
 import { WSChat } from '@/services/socket';
+import { formatHumanReadableDate } from '@/utils/date';
+import Image from 'next/image';
+import Link from 'next/link';
 import React, { ReactElement, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const Chat = () => {
-  const boxChatRef = useRef<HTMLDivElement>(null);
-  const { socket, user } = useAppContext();
-  const [input, setInput] = useState('');
-
-  const [chats, setChats] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (socket?.connected) {
-      socket?.on(WSChat.ALL_CHAT, (chats) => {
-        setChats(chats);
-        if (boxChatRef.current) {
-          const element = boxChatRef.current;
-          element.scroll({ top: element.scrollHeight, behavior: 'smooth' });
-          // boxChatRef.current.scrollTop = boxChatRef.current.scrollHeight;
-        }
-      });
-      socket?.emit(WSChat.JOIN_CHAT, (data: any) => {
-        console.log('data:', data);
-        // socket.on("")
-      });
-    }
-  }, [socket, boxChatRef]);
-
-  return (
-    <div className="min-h-screen flex justify-center mt-20">
-      <div>
-        <p className="text-2xl font-bold">Chat Box</p>
-        <div
-          ref={boxChatRef}
-          className="border flex flex-col h-[400px] overflow-y-auto w-full max-w-[500px] rounded-lg p-2 mb-10"
-        >
-          {chats.map((chat) => {
-            const isMe = user?.username === chat.user;
-            return (
-              <div key={chat._id} className={`flex w-full  p-2 items-center ${isMe ? 'justify-end' : ' '} `}>
-                <div className={`${isMe ? 'bg-blue-500' : 'bg-slate-500'} p-2 rounded-lg text-white`}>
-                  <span className="font-bold mr-1">{chat.user}:</span>
-                  <span>{chat.content}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!input.trim() || !input) return;
-            socket?.emit(WSChat.SEND, input);
-            setInput('');
-          }}
-        >
-          <textarea
-            value={input}
-            onChange={(e) => {
-              const { value } = e.target;
-              setInput(value);
-            }}
-            name="chatInput"
-            className="border w-[500px] h-[100px] rounded-lg p-2 outline-none resize-none"
-          />
-          <Button>Send</Button>
-        </form>
-      </div>
-    </div>
-  );
+  return <ChatBox chats={[]} />;
 };
 
 export default Chat;
 
 Chat.getLayout = (page: ReactElement) => {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout>
+      <LayoutChat>{page}</LayoutChat>
+    </Layout>
+  );
 };
