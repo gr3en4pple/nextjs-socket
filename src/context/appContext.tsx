@@ -40,6 +40,7 @@ const AppContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
           socketInstance = io(process.env.SOCKET_URL ?? '', {
             extraHeaders: { Authorization: `Bearer ${accessTokenCookie}` },
           });
+
           socketInstance.on('connect', () => {
             setSocket(socketInstance);
           });

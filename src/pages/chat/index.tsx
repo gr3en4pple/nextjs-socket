@@ -6,6 +6,7 @@ import { useAppContext } from '@/context/appContext';
 import Layout from '@/layout';
 import { WSChat } from '@/services/socket';
 import { formatHumanReadableDate } from '@/utils/date';
+import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { ReactElement, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -23,3 +24,10 @@ Chat.getLayout = (page: ReactElement) => {
     </Layout>
   );
 };
+
+export async function getServerSideProps(context: GetServerSideProps) {
+  console.log('context:', context);
+  return {
+    props: {},
+  };
+}

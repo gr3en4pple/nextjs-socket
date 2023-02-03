@@ -1,5 +1,6 @@
 import { useAppContext } from '@/context/appContext';
 import { WSChat } from '@/services/socket';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
 import UserList from './UserList';
@@ -21,6 +22,10 @@ const LayoutChat: React.FC<PropsWithChildren> = ({ children }) => {
         socket.emit(WSChat.JOIN_ROOM, room);
       }
     }
+
+    return () => {
+      socket?.emit(WSChat.LEAVE_ROOM, room);
+    };
   }, [socket, room]);
   return (
     <div className="min-h-screen flex w-full mt-20">
@@ -28,7 +33,7 @@ const LayoutChat: React.FC<PropsWithChildren> = ({ children }) => {
         <p className="text-4xl font-bold text-center mb-5">Chat Box</p>
         <div className="flex gap-2">
           <div className="w-1/4 ">
-            <UserList listUser={listUser} user={user} />
+            <UserList room={room} listUser={listUser} user={user} />
           </div>
           <div className="flex-1">{children}</div>
         </div>
@@ -38,3 +43,10 @@ const LayoutChat: React.FC<PropsWithChildren> = ({ children }) => {
 };
 
 export default LayoutChat;
+
+export async function getServerSideProps(context: GetServerSideProps) {
+  console.log('context:', context);
+  return {
+    props: {},
+  };
+}

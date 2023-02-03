@@ -4,14 +4,22 @@ import { useString } from '@/hooks/useDefault';
 import { WSChat } from '@/services/socket';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ChatContent from './ChatContent';
 
 interface ChatProps {
   chats: any[];
+  loading?: boolean;
 }
-const ChatBox: React.FC<ChatProps> = ({ chats }) => {
-  const boxChatRef = useRef(null);
+const ChatBox: React.FC<ChatProps> = ({ chats, loading }) => {
+  const boxChatRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (chats.length && boxChatRef.current) {
+      boxChatRef.current?.scrollTo(0, boxChatRef.current.scrollHeight);
+    }
+  }, [chats, boxChatRef]);
+
   const input = useString();
   const router = useRouter();
   const { user, socket } = useAppContext();
@@ -24,11 +32,20 @@ const ChatBox: React.FC<ChatProps> = ({ chats }) => {
   };
   return (
     <div className="">
-      <div ref={boxChatRef} className="border flex flex-col h-[500px] overflow-y-auto w-full rounded-lg p-2 mb-10">
-        {chats.map((chat) => {
-          const isMe = user?.username === chat.user;
-          return <ChatContent key={chat.id} isMe={isMe} chat={chat} />;
-        })}
+      <div
+        ref={boxChatRef}
+        className="border relative flex flex-col h-[500px] overflow-y-auto w-full rounded-lg p-2 mb-10"
+      >
+        {loading ? (
+          <div className="absolute z-10 bg-[rgba(0,0,0,.1)] inset-0 flex h-full justify-center items-center">
+            Loading...
+          </div>
+        ) : (
+          chats.map((chat) => {
+            const isMe = user?.username === chat.user;
+            return <ChatContent key={chat._id} isMe={isMe} chat={chat} />;
+          })
+        )}
       </div>
       <form onSubmit={onSubmitChat}>
         <textarea
